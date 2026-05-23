@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rasbreeder – Sementes de Coleção</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --green-deep: #1a3d2b;
+    --green-mid: #2d6a4f;
+    --green-light: #52b788;
+    --cream: #f5f0e8;
+    --cream-dark: #ede5d0;
+    --amber: #c8963e;
+    --amber-light: #e8b96a;
+    --text-dark: #1a1a1a;
+    --text-muted: #5a5a4a;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text-dark); min-height: 100vh; }
+
+  nav { background: var(--green-deep); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 68px; position: sticky; top: 0; z-index: 100; }
+  .logo { font-family: 'Playfair Display', serif; font-size: 1.7rem; color: var(--amber-light); letter-spacing: 0.04em; }
+  .logo span { font-style: italic; color: #fff; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.88rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--amber-light); }
+  .nav-actions { display: flex; gap: 1rem; align-items: center; }
+  .cart-btn { background: var(--amber); color: #fff; border: none; padding: 0.5rem 1.2rem; border-radius: 2px; font-size: 0.85rem; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; transition: background 0.2s; font-family: 'DM Sans', sans-serif; }
+  .cart-btn:hover { background: var(--amber-light); }
+
+  .hero { background: var(--green-deep); color: #fff; padding: 5rem 2rem 4rem; text-align: center; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 60% 40%, rgba(82,183,136,0.15) 0%, transparent 70%); }
+  .hero-tag { display: inline-block; background: rgba(200,150,62,0.2); color: var(--amber-light); font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.3rem 1rem; border: 1px solid rgba(200,150,62,0.4); border-radius: 2px; margin-bottom: 1.5rem; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 700; line-height: 1.1; margin-bottom: 1rem; position: relative; }
+  .hero h1 em { color: var(--green-light); font-style: italic; }
+  .hero p { color: rgba(255,255,255,0.65); font-size: 1.05rem; font-weight: 300; max-width: 500px; margin: 0 auto 2rem; line-height: 1.7; position: relative; }
+  .hero-cta { background: var(--amber); color: #fff; border: none; padding: 0.9rem 2.5rem; font-size: 0.95rem; font-weight: 500; letter-spacing: 0.05em; cursor: pointer; border-radius: 2px; transition: background 0.2s; font-family: 'DM Sans', sans-serif; position: relative; }
+  .hero-cta:hover { background: var(--amber-light); }
+
+  .stats-bar { background: var(--cream-dark); border-bottom: 1px solid rgba(0,0,0,0.08); display: flex; justify-content: center; }
+  .stat-item { padding: 1.2rem 3rem; text-align: center; border-right: 1px solid rgba(0,0,0,0.08); }
+  .stat-item:last-child { border-right: none; }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--green-mid); font-weight: 700; }
+  .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; }
+
+  .section { padding: 4rem 2rem; max-width: 1100px; margin: 0 auto; }
+  .section-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 2.5rem; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 1rem; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--green-deep); }
+  .section-title em { font-style: italic; color: var(--green-mid); }
+  .see-all { font-size: 0.82rem; color: var(--green-mid); text-decoration: none; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; border-bottom: 1px solid var(--green-light); cursor: pointer; }
+
+  .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.5rem; }
+  .product-card { background: #fff; border: 1px solid rgba(0,0,0,0.07); border-radius: 4px; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
+  .product-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(26,61,43,0.12); }
+  .product-img { height: 200px; display: flex; align-items: center; justify-content: center; position: relative; }
+  .badge { position: absolute; top: 12px; left: 12px; font-size: 0.7rem; font-weight: 500; padding: 0.2rem 0.6rem; border-radius: 2px; text-transform: uppercase; letter-spacing: 0.08em; }
+  .badge-new { background: var(--green-mid); color: #fff; }
+  .badge-hot { background: var(--amber); color: #fff; }
+  .badge-rare { background: var(--green-deep); color: var(--amber-light); }
+  .product-body { padding: 1.1rem; }
+  .product-category { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3rem; }
+  .product-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--green-deep); margin-bottom: 0.4rem; line-height: 1.3; }
+  .product-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem; }
+  .product-footer { display: flex; align-items: center; justify-content: space-between; }
+  .product-price { font-size: 1.2rem; font-weight: 700; color: var(--green-mid); }
+  .product-price small { font-size: 0.75rem; color: var(--text-muted); font-weight: 400; }
+  .add-btn { background: var(--green-deep); color: #fff; border: none; padding: 0.45rem 1rem; font-size: 0.82rem; font-weight: 500; cursor: pointer; border-radius: 2px; transition: background 0.2s; font-family: 'DM Sans', sans-serif; }
+  .add-btn:hover { background: var(--green-mid); }
+
+  .cat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+  .cat-card { background: var(--green-deep); color: #fff; padding: 2rem 1.2rem; text-align: center; border-radius: 4px; cursor: pointer; transition: background 0.2s; }
+  .cat-card:hover { background: var(--green-mid); }
+  .cat-icon { font-size: 2.2rem; margin-bottom: 0.8rem; }
+  .cat-name { font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 700; }
+  .cat-count { font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-top: 0.3rem; }
+
+  .promo-banner { background: var(--green-mid); color: #fff; padding: 3rem 2rem; text-align: center; margin: 2rem 0; }
+  .promo-banner h2 { font-family: 'Playfair Display', serif; font-size: 2rem; font-style: italic; margin-bottom: 0.5rem; }
+  .promo-banner p { color: rgba(255,255,255,0.7); margin-bottom: 1.5rem; }
+  .promo-form { display: flex; gap: 0; max-width: 400px; margin: 0 auto; }
+  .promo-input { flex: 1; border: none; padding: 0.8rem 1rem; font-size: 0.9rem; outline: none; font-family: 'DM Sans', sans-serif; }
+  .promo-submit { background: var(--amber); color: #fff; border: none; padding: 0.8rem 1.5rem; font-size: 0.9rem; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+
+  footer { background: var(--green-deep); color: rgba(255,255,255,0.6); padding: 3rem 2rem; text-align: center; }
+  footer .logo { display: block; margin-bottom: 1rem; font-size: 1.4rem; }
+  footer p { font-size: 0.82rem; line-height: 1.7; max-width: 400px; margin: 0 auto; }
+
+  .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--green-deep); color: #fff; padding: 0.9rem 1.5rem; border-radius: 4px; font-size: 0.88rem; border-left: 3px solid var(--amber); transform: translateX(200%); transition: transform 0.3s ease; z-index: 999; }
+  .toast.show { transform: translateX(0); }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .cat-grid { grid-template-columns: repeat(2, 1fr); }
+    .stats-bar { flex-wrap: wrap; }
+    .stat-item { border-right: none; border-bottom: 1px solid rgba(0,0,0,0.08); width: 50%; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Ras<span>breeder</span></div>
+  <ul class="nav-links">
+    <li><a href="#">Sementes</a></li>
+    <li><a href="#">Coleções</a></li>
+    <li><a href="#">Raridades</a></li>
+    <li><a href="#">Sobre</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="cart-btn" onclick="showToast('🛒 Carrinho aberto!')">
+      🛒 Carrinho
+      <span id="cart-count" style="background:var(--amber-light);color:var(--green-deep);border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;">0</span>
+    </button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-tag">🌱 Sementes premium desde 2018</div>
+  <h1>Cultive algo<br><em>extraordinário</em></h1>
+  <p>Sementes de coleção selecionadas com cuidado. Variedades raras, exóticas e exclusivas para o colecionador apaixonado.</p>
+  <button class="hero-cta">Explorar catálogo</button>
+</section>
+
+<div class="stats-bar">
+  <div class="stat-item"><div class="stat-num">+500</div><div class="stat-label">Variedades</div></div>
+  <div class="stat-item"><div class="stat-num">12k+</div><div class="stat-label">Clientes</div></div>
+  <div class="stat-item"><div class="stat-num">98%</div><div class="stat-label">Germinação</div></div>
+  <div class="stat-item"><div class="stat-num">6 anos</div><div class="stat-label">No mercado</div></div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <h2 class="section-title">Categorias em <em>destaque</em></h2>
+  </div>
+  <div class="cat-grid">
+    <div class="cat-card"><div class="cat-icon">🌿</div><div class="cat-name">Ervas</div><div class="cat-count">84 variedades</div></div>
+    <div class="cat-card"><div class="cat-icon">🌸</div><div class="cat-name">Flores</div><div class="cat-count">127 variedades</div></div>
+    <div class="cat-card"><div class="cat-icon">🍅</div><div class="cat-name">Hortaliças</div><div class="cat-count">96 variedades</div></div>
+    <div class="cat-card"><div class="cat-icon">🌵</div><div class="cat-name">Exóticas</div><div class="cat-count">43 variedades</div></div>
+  </div>
+</div>
+
+<div class="section" style="padding-top: 0;">
+  <div class="section-header">
+    <h2 class="section-title">Produtos em <em>destaque</em></h2>
+    <span class="see-all">Ver todos →</span>
+  </div>
+  <div class="product-grid" id="products"></div>
+</div>
+
+<div class="promo-banner">
+  <h2>Receba novidades exclusivas</h2>
+  <p>Seja o primeiro a saber sobre novas variedades e promoções especiais</p>
+  <div class="promo-form">
+    <input class="promo-input" type="email" placeholder="seu@email.com">
+    <button class="promo-submit">Cadastrar</button>
+  </div>
+</div>
+
+<footer>
+  <span class="logo">Ras<span>breeder</span></span>
+  <p>Apaixonados por sementes raras e colecionáveis. Cultivando biodiversidade, uma semente de cada vez.</p>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const products = [
+  { name: "Tomate Preto da Criméia", cat: "Hortaliça", desc: "Variedade ucraniana heirloom com sabor intenso e cor vinho profunda.", price: "R$ 18,90", bg: "#2d6a4f", emoji: "🍅", badge: "rare" },
+  { name: "Lavanda Francesa", cat: "Erva aromática", desc: "Lavandula angustifolia de perfume intenso, ótima para sachês e culinárias.", price: "R$ 14,50", bg: "#4a3f6b", emoji: "💜", badge: "hot" },
+  { name: "Pimenta Ghost", cat: "Especiaria", desc: "Uma das pimentas mais fortes do mundo. Para os corajosos.", price: "R$ 22,00", bg: "#8b3a1a", emoji: "🌶️", badge: "hot" },
+  { name: "Manjericão Roxo", cat: "Erva", desc: "Folhas violeta vibrante com aroma suave. Belíssima na horta e na mesa.", price: "R$ 12,00", bg: "#5a3567", emoji: "🌿", badge: "new" },
+  { name: "Girassol Italiano", cat: "Flor", desc: "Variedade de múltiplas flores por caule, alta produção durante todo o verão.", price: "R$ 16,00", bg: "#8b6914", emoji: "🌻", badge: null },
+  { name: "Cactus Saguaro", cat: "Exótica", desc: "O icônico cacto do deserto americano. Raro e de crescimento lento.", price: "R$ 35,00", bg: "#3a5a2a", emoji: "🌵", badge: "rare" },
+  { name: "Páprica Defumada", cat: "Especiaria", desc: "Pimentão para defumação com sabor único e característico.", price: "R$ 19,90", bg: "#7a3020", emoji: "🫑", badge: "new" },
+  { name: "Calêndula Laranja", cat: "Flor medicinal", desc: "Flores comestíveis com propriedades anti-inflamatórias e beleza ornamental.", price: "R$ 11,50", bg: "#8b5a0a", emoji: "🌼", badge: null },
+];
+
+const badgeMap = { rare: ["rare","Rara"], hot: ["hot","Popular"], new: ["new","Novidade"] };
+let cartCount = 0;
+
+const grid = document.getElementById("products");
+products.forEach(p => {
+  const b = p.badge ? `<span class="badge badge-${badgeMap[p.badge][0]}">${badgeMap[p.badge][1]}</span>` : '';
+  grid.innerHTML += `
+    <div class="product-card">
+      <div class="product-img" style="background:${p.bg}20;">${b}<span style="font-size:3.5rem;">${p.emoji}</span></div>
+      <div class="product-body">
+        <div class="product-category">${p.cat}</div>
+        <div class="product-name">${p.name}</div>
+        <div class="product-desc">${p.desc}</div>
+        <div class="product-footer">
+          <div class="product-price">${p.price} <small>/ pacote</small></div>
+          <button class="add-btn" onclick="addCart('${p.name}')">+ Adicionar</button>
+        </div>
+      </div>
+    </div>`;
+});
+
+function addCart(name) {
+  cartCount++;
+  document.getElementById("cart-count").textContent = cartCount;
+  showToast("✓ " + name + " adicionado!");
+}
+
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2500);
+}
+</script>
+</body>
+</html>
